@@ -2843,6 +2843,6 @@ app.post('/programme_principal_sphere_fictive_pda1', (req, res) => {
 
 
 // Lancement du serveur
-app.listen(port, () => {
-    console.log(`Serveur démarré sur http://localhost:${port}`);
+app.listen(PORT, () => {
+    console.log(`Serveur démarré sur http://localhost:${PORT}`);
 });
