@@ -369,8 +369,9 @@ function authenticateToken(req, res, next) {
 
     if (!token) {
         req.isAuthenticated = false; // Indique que l'utilisateur n'est pas authentifié
-        const loginPath = path.join(__dirname, 'public','page_authentification_elp_software.html');
-        return res.sendFile(loginPath);
+        //const loginPath = path.join(__dirname, 'public','page_authentification_elp_software.html');
+        //return res.sendFile(loginPath);
+        next()
         
     }
 
