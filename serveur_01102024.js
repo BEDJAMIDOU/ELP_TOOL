@@ -746,21 +746,21 @@ app.use(express.json());
 
 
 // Route principale
-app.get('/', (req, res) => {
+app.get('/', authenticateToken,(req, res) => {
     //res.clearCookie('refreshToken', { httpOnly: true, secure: true, sameSite: 'strict' });
     if (req.isAuthenticated) {
 
         // Si l'utilisateur est authentifié, redirigez vers la page principale
-        //const filePath = path.join(__dirname, 'public','PAGE_PRINCIPALE_03 11 2024 SERVEUR.html');
-        const filePath = path.join(__dirname, 'page_authentification_elp_software.html');
+        const filePath = path.join(__dirname, 'public','PAGE_PRINCIPALE_03 11 2024 SERVEUR.html');
+        //const filePath = path.join(__dirname, 'page_authentification_elp_software.html');
       
         res.sendFile(filePath);
         
 
     } else {
         // Si l'utilisateur n'est pas authentifié, redirigez vers la page de connexion
-       // const loginPath = path.join(__dirname, 'public','page_authentification_elp_software.html');
-      const loginPath = path.join(__dirname, 'public','PAGE_PRINCIPALE_03 11 2024 SERVEUR.html');
+       const loginPath = path.join(__dirname, 'public','page_authentification_elp_software.html');
+      //const loginPath = path.join(__dirname, 'public','PAGE_PRINCIPALE_03 11 2024 SERVEUR.html');
       //const loginPath = path.join(__dirname, 'public','SPHERE_FICTIVE_VERSION_FINALE_29 11 24 SERVEUR.html');
       
         res.sendFile(loginPath);
