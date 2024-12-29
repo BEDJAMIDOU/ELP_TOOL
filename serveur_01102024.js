@@ -753,6 +753,7 @@ app.get('/', (req, res) => {
         // Si l'utilisateur est authentifié, redirigez vers la page principale
         const filePath = path.join(__dirname, 'public','PAGE_PRINCIPALE_03 11 2024 SERVEUR.html');
         //const filePath = path.join(__dirname, 'page_authentification_elp_software.html');
+      
         res.sendFile(filePath);
         
 
