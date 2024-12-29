@@ -746,7 +746,7 @@ app.use(express.json());
 
 
 // Route principale
-app.get('/', authenticateToken, (req, res) => {
+app.get('/', (req, res) => {
     //res.clearCookie('refreshToken', { httpOnly: true, secure: true, sameSite: 'strict' });
     if (req.isAuthenticated) {
 
