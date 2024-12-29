@@ -11,7 +11,7 @@ const programme_principal_sphere_fictive_pda = require('./programme_principal_sp
 const programme_principal_modele_electrogeometrique_ludique = require('./programme_principal_modele_electrogeometrique_ludique');
 
 
-const port = 3000;
+const PORT = process.env.PORT || 3000;
 
 /////////////////////////////////////////////SECURISATION LOGICIEL
 
