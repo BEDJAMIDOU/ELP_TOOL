@@ -67,13 +67,13 @@ async function ensureRedisConnected() {
 }
 
 
-setInterval(() => {
-    const used = process.memoryUsage();
-    console.log(`Memory usage: 
-    RSS: ${(used.rss / 1024 / 1024).toFixed(2)} MB, 
-    Heap Total: ${(used.heapTotal / 1024 / 1024).toFixed(2)} MB, 
-    Heap Used: ${(used.heapUsed / 1024 / 1024).toFixed(2)} MB`);
-}, 5000);
+//setInterval(() => {
+ //   const used = process.memoryUsage();
+ //   console.log(`Memory usage: 
+ //   RSS: ${(used.rss / 1024 / 1024).toFixed(2)} MB, 
+ //   Heap Total: ${(used.heapTotal / 1024 / 1024).toFixed(2)} MB, 
+ //   Heap Used: ${(used.heapUsed / 1024 / 1024).toFixed(2)} MB`);
+//}, 5000);
 
 
 
