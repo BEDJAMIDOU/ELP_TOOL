@@ -39,7 +39,15 @@ const SECRET_KEY = "votre_secret"; // Clé secrète pour signer les tokens
 
 
 const redis = require('redis');
-const redisClient = redis.createClient();
+//const redisClient = redis.createClient();
+// Informations de connexion à Redis Cloud
+const redisClient = redis.createClient({
+    socket: {
+      host: 'redis-10389.c339.eu-west-3-1.ec2.redns.redis-cloud.com', // Adresse fournie
+      port: 10389, // Port fourni
+    },
+    password: 'fomZX2oBMxQDw2kpWJ0UI6pQLMaNjC5j' // Remplacez par votre mot de passe Redis
+  });
 
 
 
