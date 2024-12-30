@@ -799,7 +799,10 @@ app.use(express.json());
     
 //});
 
-
+app.use((err, req, res, next) => {
+    console.error(err.stack); // Affiche les détails de l'erreur dans les journaux
+    res.status(500).send('Quelque chose a mal tourné !');
+});
 
 
 // Route principale
