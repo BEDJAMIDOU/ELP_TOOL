@@ -815,7 +815,7 @@ app.get('/', authenticateToken, (req, res) => {
 
     } else {
         // Si l'utilisateur n'est pas authentifié, redirigez vers la page de connexion
-        const loginPath = path.join(__dirname, 'public','/page_authentification_elp_software.html');
+        const loginPath = path.join(__dirname, 'public','page_authentification_elp_software.html');
         res.sendFile(loginPath);
     }
 });
