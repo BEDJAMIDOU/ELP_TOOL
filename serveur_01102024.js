@@ -125,48 +125,90 @@ async function getActiveSessions(userId) {
     }
 }
 
-const mysql = require('mysql2/promise');
+//const mysql = require('mysql2/promise');
+const { MongoClient } = require('mongodb');
 
 // Configuration de la connexion MySQL
+//const dbConfig = {
+   // host: 'localhost', // Adresse IP ou nom de domaine du serveur distant
+  //  user: 'root',             // Nom d'utilisateur
+   // password: '',         // Mot de passe
+   // database: 'admin_database',   // Base de données administrative
+//};
+
+// Configuration de la connexion MongoDB
 const dbConfig = {
-    host: 'localhost', // Adresse IP ou nom de domaine du serveur distant
-    user: 'root',             // Nom d'utilisateur
-    password: '',         // Mot de passe
-    database: 'admin_database',   // Base de données administrative
+    uri: 'mongodb+srv://molomongars:xzSptF6RXZHFJluK@elp.ddgnk.mongodb.net/UTILISATEURS', // Remplacez par l'URI de votre cluster MongoDB Atlas
 };
 
 
 
 // Fonction qui agit comme `find` mais interroge la base de données
-async function findUserFromDatabase(filter) {
-    const connection = await mysql.createConnection(dbConfig);
+//async function findUserFromDatabase(filter) {
+    //const connection = await mysql.createConnection(dbConfig);
+   // const client = new MongoClient(uri);
 
-    try {
+   // try {
         // Construire une requête dynamique basée sur les critères de filtre
-        const whereClauses = [];
-        const values = [];
+   //     const whereClauses = [];
+    //    const values = [];
 
-        for (const key in filter) {
-            whereClauses.push(`${key} = ?`);
-            values.push(filter[key]);
-        }
+    //    for (const key in filter) {
+    ///        whereClauses.push(`${key} = ?`);
+     //       values.push(filter[key]);
+      //  }
 
         // Concaténer les clauses WHERE
-        const whereString = whereClauses.join(' AND ');
-        const query = `SELECT * FROM users WHERE ${whereString} LIMIT 1`;
+      //  const whereString = whereClauses.join(' AND ');
+      //  const query = `SELECT * FROM users WHERE ${whereString} LIMIT 1`;
 
         // Exécuter la requête
-        const [rows] = await connection.query(query, values);
+      //  const [rows] = await connection.query(query, values);
 
         // Retourner le premier utilisateur trouvé, ou null si aucun
-        return rows.length > 0 ? rows[0] : null;
+     //   return rows.length > 0 ? rows[0] : null;
+  //  } catch (error) {
+   //     console.error('Erreur lors de la recherche dans la base de données :', error);
+   //     throw error;
+   // } finally {
+    //    await connection.end();
+  //  }
+//}
+
+
+async function findUserFromDatabase(filter) {
+
+    
+    const client = new MongoClient(dbConfig.uri); // Pas besoin des options obsolètes
+
+    try {
+        // Connexion à MongoDB Atlas
+        await client.connect();
+
+        console.log("Connexion réussie à MongoDB Atlas!");
+
+        // Accéder à la base de données et à la collection
+        const database = client.db('UTILISATEURS'); // Nom de la base de données
+        const collection = database.collection('BEDJA'); // Nom de la collection (ici "users")
+
+        console.log("Connexion à la collection réussie.");
+
+        // Exécuter la requête avec le filtre
+        const user = await collection.findOne(filter);
+
+        // Retourner l'utilisateur trouvé ou null si aucun
+        return user || null;
     } catch (error) {
-        console.error('Erreur lors de la recherche dans la base de données :', error);
+        console.error('Erreur lors de la recherche dans MongoDB :', error);
         throw error;
     } finally {
-        await connection.end();
+        // Fermer la connexion
+        await client.close();
     }
 }
+
+
+
 
 
 
