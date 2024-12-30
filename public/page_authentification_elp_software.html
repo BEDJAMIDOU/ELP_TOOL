@@ -480,7 +480,7 @@ async function loginUser() {
             document.getElementById('secure-data').style.display = 'block';
         } else {
 
-            message.textContent = data.message || "Erreur lors de l'authentification!";
+            message.textContent = result.message || "Erreur lors de l'authentification!";
             message.className = "error";
         }
 
