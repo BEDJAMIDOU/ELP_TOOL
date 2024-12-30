@@ -254,13 +254,12 @@ app.post('/login', async (req, res) => {
         
 
         
-
         //console.log('userId:',userId)
         //const userId = userid.id;
 
         const activeSessions =  await getActiveSessions(userId); // Attendez ici
 
-        //console.log(activeSessions)
+        console.log(activeSessions)
 
 
         // Récupérer les sessions actives pour cet utilisateur
