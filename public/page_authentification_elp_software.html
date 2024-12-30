@@ -514,7 +514,7 @@ async function refreshAccessToken() {
     } catch (error) {
         console.error('Erreur:', error.message);
         // Optionnel : Redirigez vers la page de connexion en cas d'échec
-        window.location.href = '/login';
+        //window.location.href = '/login';
     }
 }
 
@@ -580,7 +580,7 @@ async function accessProtectedData() {
         }
     } catch (err) {
         console.error("Erreur lors de l'accès :", err);
-        message.textContent = "Impossible de se connecter au serveur. Veuillez réessayer plus tard.";
+        //message.textContent = "Impossible de se connecter au serveur. Veuillez réessayer plus tard.";
     }
 }
 
