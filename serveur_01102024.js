@@ -68,10 +68,10 @@ async function ensureRedisConnected() {
 
 
 //setInterval(() => {
- //   const used = process.memoryUsage();
- //   console.log(`Memory usage: 
- //   RSS: ${(used.rss / 1024 / 1024).toFixed(2)} MB, 
- //   Heap Total: ${(used.heapTotal / 1024 / 1024).toFixed(2)} MB, 
+//    const used = process.memoryUsage();
+//    console.log(`Memory usage: 
+//    RSS: ${(used.rss / 1024 / 1024).toFixed(2)} MB, 
+//    Heap Total: ${(used.heapTotal / 1024 / 1024).toFixed(2)} MB, 
  //   Heap Used: ${(used.heapUsed / 1024 / 1024).toFixed(2)} MB`);
 //}, 5000);
 
@@ -369,10 +369,10 @@ function authenticateToken(req, res, next) {
 
     if (!token) {
         req.isAuthenticated = false; // Indique que l'utilisateur n'est pas authentifié
+        //return res.status(401).json({ message: 'Token manquant, accès refusé' });
+        return next();
         //const loginPath = path.join(__dirname, 'public','page_authentification_elp_software.html');
         //return res.sendFile(loginPath);
-        next()
-        
     }
 
     try {
@@ -531,6 +531,8 @@ app.post('/logout',authenticateToken, async (req, res) => {
 
     // Supprimer la session
     await deleteSession(req.userId);
+
+    console.log()
 
 
     //if (result) {
@@ -746,23 +748,19 @@ app.use(express.json());
 
 
 // Route principale
-app.get('/', authenticateToken,(req, res) => {
+app.get('/', authenticateToken, (req, res) => {
     //res.clearCookie('refreshToken', { httpOnly: true, secure: true, sameSite: 'strict' });
     if (req.isAuthenticated) {
 
         // Si l'utilisateur est authentifié, redirigez vers la page principale
         const filePath = path.join(__dirname, 'public','PAGE_PRINCIPALE_03 11 2024 SERVEUR.html');
         //const filePath = path.join(__dirname, 'page_authentification_elp_software.html');
-      
         res.sendFile(filePath);
         
 
     } else {
         // Si l'utilisateur n'est pas authentifié, redirigez vers la page de connexion
-       const loginPath = path.join(__dirname, 'public','page_authentification_elp_software.html');
-      //const loginPath = path.join(__dirname, 'public','PAGE_PRINCIPALE_03 11 2024 SERVEUR.html');
-      //const loginPath = path.join(__dirname, 'public','SPHERE_FICTIVE_VERSION_FINALE_29 11 24 SERVEUR.html');
-      
+        const loginPath = path.join(__dirname, 'public','page_authentification_elp_software.html');
         res.sendFile(loginPath);
     }
 });
