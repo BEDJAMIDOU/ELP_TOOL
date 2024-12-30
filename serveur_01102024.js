@@ -22,7 +22,14 @@ const jwt = require('jsonwebtoken');
 const path = require('path');
 
 const cors = require('cors');
-app.use(cors());
+//app.use(cors());
+
+const corsOptions = {
+    origin: 'https://pure-sea-04075-be01ae23d8d6.herokuapp.com',  // L'adresse de votre frontend (Heroku)
+    credentials: true  // Assurez-vous que l'option `credentials` est activée pour autoriser les cookies
+  };
+
+  app.use(cors(corsOptions));
 
 //const app = express();
 app.use(bodyParser.json());
