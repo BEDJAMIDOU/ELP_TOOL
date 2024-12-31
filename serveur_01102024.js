@@ -192,9 +192,6 @@ const dbConfig = {
 
 
 async function findUserFromDatabase(filter) {
-
-    
-    //const client = new MongoClient(dbConfig.uri); // Pas besoin des options obsolètes
     const client = new MongoClient(dbConfig.uri, {
         tls: true,
         useNewUrlParser: true,
@@ -204,20 +201,35 @@ async function findUserFromDatabase(filter) {
     try {
         // Connexion à MongoDB Atlas
         await client.connect();
-
         console.log("Connexion réussie à MongoDB Atlas!");
 
-        // Accéder à la base de données et à la collection
-        const database = client.db('UTILISATEURS'); // Nom de la base de données
-        const collection = database.collection('BEDJA'); // Nom de la collection (ici "users")
+        // Accéder à la base de données 'UTILISATEURS'
+        const database = client.db('UTILISATEURS');
 
-        console.log("Connexion à la collection réussie.");
+        // Lister toutes les collections de la base de données
+        const collections = await database.listCollections().toArray();
 
-        // Exécuter la requête avec le filtre
-        const user = await collection.findOne(filter);
+        console.log(`Recherche dans ${collections.length} collections...`);
 
-        // Retourner l'utilisateur trouvé ou null si aucun
-        return user || null;
+        // Parcourir toutes les collections pour chercher l'utilisateur
+        for (const collInfo of collections) {
+            const collectionName = collInfo.name;
+            const collection = database.collection(collectionName);
+
+            console.log(`Recherche dans la collection : ${collectionName}`);
+
+            // Rechercher un utilisateur correspondant au filtre dans chaque collection
+            const user = await collection.findOne(filter);
+
+            if (user) {
+                console.log(`Utilisateur trouvé dans la collection : ${collectionName}`);
+                return user; // Retourner l'utilisateur trouvé
+            }
+        }
+
+        // Si aucun utilisateur n'est trouvé dans toutes les collections
+        console.log("Aucun utilisateur trouvé dans les collections.");
+        return null;
     } catch (error) {
         console.error('Erreur lors de la recherche dans MongoDB :', error);
         throw error;
@@ -530,7 +542,7 @@ app.use((req, res, next) => {
 
     // Afficher les autres types de requêtes si nécessaire
     if (!decodedPath.includes('.')) {
-        console.log('Non - Autre requête (pas un fichier statique) :', decodedPath);
+       // console.log('Non - Autre requête (pas un fichier statique) :', decodedPath);
     }
 
     next(); // Continuer pour les autres types de requêtes
@@ -744,33 +756,67 @@ app.post('/users', async (req, res) => {
         return res.status(403).json({ message: 'Données administrateur invalides.' });
     }
 
+    const client = new MongoClient(dbConfig.uri, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+    });
+
 
 
     try {
 
         
+
+        
         // Connexion à la base de données
-        const connection = await mysql.createConnection(dbConfig);
+        //const connection = await mysql.createConnection(dbConfig);
+
+
 
          // Vérification de la validité de l'ID pour empêcher les injections SQL
          if (!/^[a-zA-Z0-9_]+$/.test(Id)) {
             return res.status(400).json({ message: 'ID utilisateur invalide.' });
         }
+
+        await client.connect();
+
+        
         
         // Nom de la nouvelle base de données (par exemple, basé sur l'ID utilisateur)
-        const newDatabaseName = `db_${Id}`;
+        const newDatabaseName ='UTILISATEURS';// `${fullname.replace(/[^a-zA-Z0-9._-]/g, '_')}_${Id.replace(/[^a-zA-Z0-9._-]/g, '_')}`;
+        //const db = client.db(newDatabaseName);
+        const newDb = client.db(newDatabaseName);
+
+        const usersCollection = newDb.collection(`${fullname.replace(/[^a-zA-Z0-9._-]/g, '_')}_${Id.replace(/[^a-zA-Z0-9._-]/g, '_')}`);
+
+          // Insérer l'utilisateur dans la collection "users"
+          const result = await usersCollection.insertOne({
+            Id: Id,
+            username: username,
+            fullname: fullname,
+            email: email,
+            organisation: organisation,
+            phone: phone,
+            subscriptionStartDate: subscriptionStartDate,
+            password: password, // Remarque : Hasher le mot de passe avant de le stocker
+            licenses: licenses,
+        });
+
+        console.log(`Nouvelle base de données '${newDatabaseName}' créée avec succès.`);
+        console.log(`Utilisateur ajouté avec l'ID : ${result.insertedId}`);
+
 
         // Créer une nouvelle base de données
-        await connection.query(`CREATE DATABASE IF NOT EXISTS ${newDatabaseName}`);
+        //await connection.query(`CREATE DATABASE IF NOT EXISTS ${newDatabaseName}`);
 
         // Enregistrer l'utilisateur dans une table de suivi
-        await connection.query(
-            `INSERT INTO users (Id, username, fullname, email, organisation, phone, subscriptionStartDate, password,licenses)
-             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-            [Id, username, fullname, email, organisation, phone, formattedDate, password, licenses]
-        );
+        //await connection.query(
+         //   `INSERT INTO users (Id, username, fullname, email, organisation, phone, subscriptionStartDate, password,licenses)
+         //    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+         //   [Id, username, fullname, email, organisation, phone, formattedDate, password, licenses]
+        //);
 
-        await connection.end();
+        //await client.end();
         res.status(200).json({ message: 'Nouvelle base de données créée avec succès.', databaseName: newDatabaseName });
     } catch (err) {
         console.error('Erreur lors de la création de la base de données :', err);
