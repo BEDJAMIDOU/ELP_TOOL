@@ -343,7 +343,7 @@ app.post('/login', async (req, res) => {
         //await setAsync(userId, JSON.stringify(activeSessions), 'EX', 3600);
 
         await redisClient.set(userId, JSON.stringify(activeSessions), {
-            EX: 604800, // Expiration en 7 jours (en secondes)
+            EX: 3600, // Expiration en 1 heure (en secondes)
         });
         
 
