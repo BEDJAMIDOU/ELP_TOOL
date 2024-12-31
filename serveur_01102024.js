@@ -194,7 +194,12 @@ const dbConfig = {
 async function findUserFromDatabase(filter) {
 
     
-    const client = new MongoClient(dbConfig.uri); // Pas besoin des options obsolètes
+    //const client = new MongoClient(dbConfig.uri); // Pas besoin des options obsolètes
+    const client = new MongoClient(dbConfig.uri, {
+        tls: true,
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+    });
 
     try {
         // Connexion à MongoDB Atlas
@@ -799,10 +804,8 @@ app.use(express.json());
     
 //});
 
-app.use((err, req, res, next) => {
-    console.error(err.stack); // Affiche les détails de l'erreur dans les journaux
-    res.status(500).send('Quelque chose a mal tourné !');
-});
+
+
 
 
 // Route principale
